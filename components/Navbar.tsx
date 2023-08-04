@@ -5,6 +5,7 @@ import { Poppins } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import { UserButton } from '@clerk/nextjs';
 import { Button } from './ui/button';
+import { ThemeToggle } from './ThemeToggle';
 
 const font = Poppins({
   weight: '600',
@@ -13,7 +14,7 @@ const font = Poppins({
 
 export const Navbar = () => {
   return (
-    <div className='fixed w-full z-50 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary'>
+    <div className='fixed w-full z-50 h-16 flex justify-between items-center py-2 px-4 border-b border-primary/10 bg-secondary'>
       <div className='flex items-center '>
         <Menu className='block md:hidden' />
         <Link href='/'>
@@ -32,6 +33,7 @@ export const Navbar = () => {
           Upgrade
           <Sparkles className='h-4 w-4 fill-white text-white ml-2' />
         </Button>
+        <ThemeToggle/>
         <UserButton />
       </div>
     </div>

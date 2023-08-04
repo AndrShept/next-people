@@ -3,6 +3,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Navbar } from '@/components/Navbar';
+import { ThemeProvider } from '@/components/ThemeProvider';
+import { Sidebar } from '@/components/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,12 +20,17 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang='en'>
+      <html lang='en' suppressHydrationWarning>
         <body className={inter.className}>
-          <Navbar/>
-          {children}
-          
-          </body>
+          <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+            <Navbar />
+
+            <div className='hidden md:flex mt-16 w-20 flex-col fixed inset-0'>
+              <Sidebar />
+            </div>
+            <main className='md:pl-20 pt-16 h-full'>{children}</main>
+          </ThemeProvider>
+        </body>
       </html>
     </ClerkProvider>
   );
