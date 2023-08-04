@@ -21,14 +21,14 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang='en' suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={`${inter.className} bg-secondary/50`}>
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
             <Navbar />
 
-            <div className='hidden md:flex mt-16 w-20 flex-col fixed inset-0'>
+            <div className='hidden md:flex mt-16 w-20 flex-col fixed inset-0 '>
               <Sidebar />
             </div>
-            <main className='md:pl-20 pt-16 h-full'>{children}</main>
+            <main className='md:pl-20 pt-16 h-full '>{children}</main>
           </ThemeProvider>
         </body>
       </html>
