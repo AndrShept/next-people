@@ -1,4 +1,4 @@
-import { Categories } from '@/components/Categorys'
+import { Categories } from '@/components/Categories'
 import { SearchInput } from '@/components/SearchInput'
 import { prisma } from '@/lib/prisma'
 

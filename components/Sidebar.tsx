@@ -3,7 +3,6 @@ import React from 'react';
 import { Home, Plus, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { usePathname, useRouter } from 'next/navigation';
-import Link from 'next/link';
 
 export const Sidebar = () => {
   const pathname = usePathname();
