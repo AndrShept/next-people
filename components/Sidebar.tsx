@@ -40,7 +40,7 @@ export const Sidebar = () => {
             <div
               key={route.href}
               className={cn(
-                'text-muted-foreground  text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition',
+                'text-muted-foreground  text-sm group flex p-[9px] w-full justify-start font-medium cursor-pointer hover:text-primary hover:bg-primary/10 rounded-lg transition',
                 {
                   'bg-primary/10 text-primary': pathname === route.href,
                 }
