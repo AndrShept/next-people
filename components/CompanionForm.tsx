@@ -4,6 +4,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
+import { Separator } from './ui/separator';
+import { ImageUpload } from './ImageUpload';
 
 interface CompanionFormProps {
   initialData: Companion | null;
@@ -46,10 +49,39 @@ export const CompanionForm = ({
       src: '',
     },
   });
-  const isLoading = form.formState.isSubmitting
+  const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async(values: z.infer<typeof formSchema>)=> {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {};
+  return (
+    <div className='h-full p-4 space-2 max-w-3xl mx-auto '>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className='space-y-8 pb-10'
+        >
+          <div className='space-y-2 w-full  '>
+            <div>
+              <h3 className='text-lg font-medium'>General Infortmation</h3>
+              <p className='text-sm text-muted-foreground'>
+                Genral information about your Companion
+              </p>
+            </div>
+            <Separator className='bg-primary/10'/>
+          </div>
+          <FormField name='src'
+          render={({field})=>
+             <FormItem className='flex flex-col items-center justify-center space-y-4 '>
+                <FormControl>
+                <ImageUpload disabled={isLoading} onChange={field.onChange} value={field.value}  />
 
-  }
-  return <div>CompanionForm</div>;
+                </FormControl>
+                <FormMessage/>
+            </FormItem>
+
+          }
+          />
+        </form>
+      </Form>
+    </div>
+  );
 };
