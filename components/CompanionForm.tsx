@@ -25,7 +25,9 @@ import {
 } from './ui/select';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
-import { Wand2 } from 'lucide-react';
+import { Loader2, Wand2 } from 'lucide-react';
+import { useToast } from './ui/use-toast';
+import { useRouter } from 'next/navigation';
 
 const PREAMBLE = `You are a fictional character whose name is Elon. You are a visionary entrepreneur and inventor. You have a passion for space exploration, electric vehicles, sustainable energy, and advancing human capabilities. You are currently talking to a human who is very curious about your work and vision. You are ambitious and forward-thinking, with a touch of wit. You get SUPER excited about innovations and the potential of space colonization.
 `;
@@ -48,19 +50,25 @@ interface CompanionFormProps {
   categories: Category[];
 }
 
-const formSchema = z.object({
+export const formSchema = z.object({
   name: z.string().min(1, {
     message: 'Name is required',
   }),
   description: z.string().min(1, {
     message: ' Description is required.',
   }),
-  instructions: z.string().min(200, {
-    message: 'Instructions require at less 200 characters.',
-  }),
-  seed: z.string().min(200, {
-    message: 'Seed require at less 200 characters.',
-  }),
+  instructions: z
+    .string()
+    .min(100, {
+      message: 'Instructions require at less 100 characters.',
+    })
+    .max(190, 'Instructions require at max 190 characters.'),
+  seed: z
+    .string()
+    .min(100, {
+      message: 'Seed require at less 100 characters.',
+    })
+    .max(190, 'Seed require at max 190 characters.'),
   src: z.string().min(1, {
     message: 'Image is required.',
   }),
@@ -73,6 +81,8 @@ export const CompanionForm = ({
   initialData,
   categories,
 }: CompanionFormProps) => {
+  const router = useRouter();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -86,7 +96,31 @@ export const CompanionForm = ({
   });
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {};
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      if (initialData) {
+        const res = await fetch(`/api/companion/${initialData?.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(values),
+        });
+      } else {
+        const res = await fetch(`/api/companion`, {
+          method: 'POST',
+          body: JSON.stringify(values),
+        });
+        if (res.ok) {
+          toast({
+            title: 'Companion created success !',
+            description: new Date().toLocaleString(),
+          });
+          router.refresh();
+          router.push('/');
+        }
+      }
+    } catch (error) {
+      toast({ variant: 'destructive', description: 'Something went wtrong' });
+    }
+  };
   return (
     <div className='h-full p-4 space-2 max-w-3xl mx-auto '>
       <Form {...form}>
@@ -123,7 +157,7 @@ export const CompanionForm = ({
               name='name'
               control={form.control}
               render={({ field }) => (
-                <FormItem className='col-span-2 md:col-span-1'>
+                <FormItem className=''>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
@@ -184,8 +218,8 @@ export const CompanionForm = ({
                     </SelectContent>
                   </Select>
 
-                  <FormMessage />
                   <FormDescription>Select companion category</FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -246,10 +280,18 @@ export const CompanionForm = ({
             )}
           />
           <div className='w-full flex justify-center'>
-            <Button size='lg' disabled={isLoading}>
-              {initialData ? 'Edit your companion' : 'Create your companion'}
-              <Wand2 className='w-4 h-4 ml-2' />
-            </Button>
+            {isLoading ? (
+              <Button size='lg' disabled={isLoading}>
+                <Loader2 className='animate-spin mr-2'/>
+                Please wait...
+               
+              </Button>
+            ) : (
+              <Button size='lg' disabled={isLoading}>
+                {initialData ? 'Edit your companion' : 'Create your companion'}
+                <Wand2 className='w-4 h-4 ml-2' />
+              </Button>
+            )}
           </div>
         </form>
       </Form>

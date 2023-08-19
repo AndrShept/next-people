@@ -26,7 +26,7 @@ export const ImageUpload = ({
         options={{ maxFiles: 1 }}
         uploadPreset='t3hvddvv' // cloudinary settings/Upload
       >
-        <div className='p-4 border-4 border-dashed border-primary/10 rounded-lg hover:opacity-75 transition flex flex-col space-y-2 items-center justify-center'>
+        <div className='p-4 border-4 border-dashed border-primary/10 rounded-lg hover:opacity-75 transition flex   '>
           <div className='relative w-40 h-40 '>
             <Image
               className='object-cover rounded-lg'
