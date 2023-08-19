@@ -103,6 +103,14 @@ export const CompanionForm = ({
           method: 'PUT',
           body: JSON.stringify(values),
         });
+        if (res.ok) {
+          toast({
+            title: 'Companion update success !',
+            description: new Date().toLocaleString(),
+          });
+          router.refresh();
+          router.push('/');
+        }
       } else {
         const res = await fetch(`/api/companion`, {
           method: 'POST',
