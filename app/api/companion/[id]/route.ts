@@ -12,6 +12,10 @@ export const PUT = async (
 
     const { name, description, categoryId, instructions, seed, src } = body;
 
+    if (!params.id) {
+      return new NextResponse(' Companion ID is required', { status: 400 });
+    }
+
     if (
       !name ||
       !description ||
@@ -22,10 +26,10 @@ export const PUT = async (
     ) {
       return new NextResponse('Missing required fields', { status: 400 });
     }
-    if (!user || !user.id || !user.firstName || !user.lastName) {
+    if (!user || !user.id || !user.firstName) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-    const newCompanion = await prisma.companion.update({
+    const updatedCompanion = await prisma.companion.update({
       where: { id: params.id },
       data: {
         name,
@@ -35,10 +39,10 @@ export const PUT = async (
         seed,
         src,
         userId: user.id,
-        userName: `@${user.firstName}_${user.lastName}`,
+        userName: `@${user.firstName}`,
       },
     });
-    return NextResponse.json(newCompanion, { status: 200 });
+    return NextResponse.json(updatedCompanion, { status: 200 });
   } catch (error) {
     return new NextResponse('Internal ERROR', { status: 500 });
   }

@@ -11,6 +11,7 @@ export const SearchInput = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get('categoryId');
   const name = searchParams.get('name');
+ 
 
   const [value, setValue] = useState(name || '');
   const debounceValue = useDebounce<string>(value, 500);
@@ -22,6 +23,7 @@ export const SearchInput = () => {
     const query = {
       name: debounceValue,
       categoryId: categoryId,
+     
     };
     const url = qs.stringifyUrl(
       {
