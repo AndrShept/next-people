@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs';
+import {  currentUser } from '@clerk/nextjs';
 
 export const PUT = async (
   req: Request,
@@ -44,6 +44,31 @@ export const PUT = async (
     });
     return NextResponse.json(updatedCompanion, { status: 200 });
   } catch (error) {
+    console.log('COMPANION_PATCH_ERROR', error);
+    return new NextResponse('Internal ERROR', { status: 500 });
+  }
+};
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
+  try {
+    const user = await currentUser();
+    
+
+    if (!params.id) {
+      return new NextResponse(' Companion ID is required', { status: 400 });
+    }
+
+    if (!user || !user.id || !user.firstName) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+    const deletedCompanion = await prisma.companion.delete({
+      where: { id: params.id, userId: user.id },
+    });
+    return NextResponse.json(deletedCompanion, { status: 200 });
+  } catch (error) {
+    console.log('COMPANION_DELETE_ERROR', error);
     return new NextResponse('Internal ERROR', { status: 500 });
   }
 };
