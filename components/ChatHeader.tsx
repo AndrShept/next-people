@@ -1,10 +1,12 @@
 'use client';
-import React from 'react';
+import React, { useTransition } from 'react';
 import { ChatClientProps } from './ChatClient';
 import { Button } from './ui/button';
 import {
   ChevronLeft,
   Edit,
+  Loader,
+  Loader2,
   MessageSquare,
   MoreVertical,
   Trash,
@@ -21,23 +23,27 @@ import {
 import { useToast } from './ui/use-toast';
 
 export const ChatHeader = ({ companion }: ChatClientProps) => {
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const { user } = useUser();
   const { toast } = useToast();
 
+
   const onDelete = async () => {
     try {
       if (confirm('Confirm to delete ?')) {
-        const res = await fetch(`/api/companion/${companion.id}`, {
-          method: 'DELETE',
-        });
-        if (res.ok) {
-          toast({
-            title: 'Success',
+        startTransition(async () => {
+          const res = await fetch(`/api/companion/${companion.id}`, {
+            method: 'DELETE',
           });
-          router.refresh();
-          router.push('/');
-        }
+          if (res.ok) {
+            toast({
+              title: 'Success',
+            });
+            router.refresh();
+            router.push('/');
+          }
+        });
       }
     } catch (error) {
       toast({
@@ -70,9 +76,12 @@ export const ChatHeader = ({ companion }: ChatClientProps) => {
       {user?.id === companion.userId && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={'secondary'} size={'icon'}>
-              <MoreVertical></MoreVertical>
-            </Button>
+            <div className='flex items-center'>
+              {isPending && <Loader2 className='animate-spin mr-2' />}
+              <Button variant={'secondary'} size={'icon'}>
+                <MoreVertical></MoreVertical>
+              </Button>
+            </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align='end'>
             <DropdownMenuItem
