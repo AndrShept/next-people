@@ -11,7 +11,7 @@ import { Copy } from 'lucide-react';
 export interface ChatMessageProps {
   role: 'system' | 'user';
   content?: string;
-  isLoading: boolean;
+  isLoading?: boolean;
   src?: string;
 }
 

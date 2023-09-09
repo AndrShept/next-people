@@ -21,7 +21,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang='en' suppressHydrationWarning>
+      <html lang='en' suppressHydrationWarning >
+
         <body className={`${inter.className} bg-secondary/50`}>
           <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
             <Navbar />
